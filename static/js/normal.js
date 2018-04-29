@@ -1,17 +1,6 @@
-// APIに対して分布の種類とパラメータを指定し、x, yの値をJSONで得る
-// TODO: interactiveにパラメータを指定
-$.ajax({
-    type: "GET",
-    url: "/api/calculate/norm",
-    data: { loc: 0.0, scale: 1.0}
-}).done(function(data) {
-    // 得られたデータをもとにD3でグラフを描画
-    plotDistribution(data);
-    console.log(data);
-});
-
-
+// 細かく区切られたx, yの配列をもとにグラフをプロットする
 // TODO: plotDistribution()は任意のデータ・範囲に適用できるようにして外部ファイルに抽出
+// これを外部にしたらnormal.jsは不要になりutil的なやつとinlineだけでよくなる？
 var plotDistribution = function(data) {
     // 描画領域
     var svg = d3.select("svg#chart");
@@ -69,3 +58,9 @@ var plotDistribution = function(data) {
 	.attr("stroke-width", 1.5)
 	.attr("d", line);
 }
+
+
+// APIからJSONを取得して描画する
+// TODO: interactiveにパラメータを指定
+// plotDistributionもelementのupdateに対応させる必要
+getData("norm", { "loc": 0.0, "scale": 1.0}, plotDistribution);
