@@ -1,0 +1,32 @@
+{% extends "layout.html" %}
+{% block title %}Normal Distribution{% endblock %}
+
+<!-- head -->
+{% block head %}
+{{ super() }}
+<style>
+</style>
+{% endblock %}
+
+<!-- content -->
+{% block content %}
+<h1>Normal Distribution</h1>
+
+<div>
+		<h3>確率密度関数</h3>
+		平均$\mu$, 分散$\sigma$に対し、
+		$$
+		f(x) = \frac{1}{\sqrt{2 \pi \sigma ^2}} exp \left( - \frac{(x-\mu)^2}{2\sigma ^2} \right) \:\: (x \in \mathbb{R})
+		$$
+
+		<h3>平均・分散</h3>
+		この分布に従う確率変数$X$の平均・分散は、
+		$$
+		E[X] = \mu,\: V[X] = \sigma^2
+		$$
+</div>
+
+<h2>グラフ</h2>
+<svg id="chart" width="960" height="500"></svg>
+<script src="/static/js/normal.js"></script>
+{% endblock %}
