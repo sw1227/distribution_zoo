@@ -2,8 +2,10 @@
 // TODO: plotDistribution()は任意のデータ・範囲に適用できるようにして外部ファイルに抽出
 // これを外部にしたらnormal.jsは不要になりutil的なやつとinlineだけでよくなる？
 var plotDistribution = function(data) {
-    // 描画領域
-    var svg = d3.select("svg#chart");
+    // 描画領域: 幅はparentに合わせる
+    var svg = d3.select("svg#chart")
+	.attr("width", $("#chart").parent().width())
+	.attr("height", 500);
 
     // マージンの処理
     var margin = {top: 20, right: 20, bottom: 40, left: 50};
