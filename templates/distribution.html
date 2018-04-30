@@ -1,5 +1,5 @@
+<!-- 確率分布詳細のテンプレート -->
 {% extends "layout.html" %}
-{% block title %}Normal Distribution{% endblock %}
 
 <!-- head -->
 {% block head %}
@@ -8,17 +8,6 @@
  .tick line {
 		 stroke: #ddd;
      stroke-width: 0.5;
- }
-
- .card-header {
-		 display: table;
-		 width: 100%;
- }
-
- .card-title {
-		 display: table-cell;
-		 vertical-align: middle;
-		 text-align: center;
  }
 
  .slider {
@@ -31,29 +20,24 @@
 {% block content %}
 
 <br>
-<h3 class="category">正規分布</h3>
+<!-- 分布の名前 -->
+<h3 class="category">{% block name %}{% endblock %}</h3>
 
+<!-- 分布の数学的詳細 -->
 <div class="card">
 		<div class="card-body">
 				<div>
 						<h5 class="title">確率密度関数</h5>
-						平均$\mu$, 分散$\sigma$に対し、
-						$$
-						f(x) = \frac{1}{\sqrt{2 \pi \sigma ^2}} exp \left( - \frac{(x-\mu)^2}{2\sigma ^2} \right) \:\: (x \in \mathbb{R})
-						$$
+						{% block equation %}{% endblock %}
 
 						<h5 class="title">平均・分散</h5>
-						この分布に従う確率変数$X$の平均・分散は、
-						$$
-						E[X] = \mu,\: V[X] = \sigma^2
-						$$
+						{% block statistic %}{% endblock %}
+
 				</div>
 		</div>
 </div>
 
-
-
-
+<!-- グラフ -->
 <div class="card">
 		<div class="card-body">
 				<div class="row">
@@ -61,20 +45,14 @@
 								<svg id="chart"></svg>
 						</div>
 						<div class="col-md-3">
-								<div>
-										平均 $\mu = $<span id="mean-value">0.00</span>
-										<div id="sliderMean" class="slider slider-primary"></div>
-								</div>
-								<br>
-								<div>
-										標準偏差 $\sigma = $<span id="var-value">1.00</span>
-										<div id="sliderVar" class="slider slider-primary"></div>
-								</div>
+								{% block parameter %}{% endblock %}
 						</div>
 				</div>
 		</div>
 </div>
 
+
+<!-- Javascript -->
 <script>
  var getData = function(func_name, params, callback) {
 		 // APIに対して分布の種類とパラメータを指定し、x, yの値をJSONで得る
@@ -88,6 +66,8 @@
 		 });
  }
 </script>
+{% block scripts %}{% endblock %}
 
-<script src="{{ url_for('static', filename='js/normal.js') }}"></script>
 {% endblock %}
+
+

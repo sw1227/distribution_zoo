@@ -1,0 +1,44 @@
+{% extends "distribution.html" %}
+{% block title %}Exponential Distribution{% endblock %}
+
+
+{% block name %}
+指数分布
+{% endblock %}
+
+
+{% block equation %}
+
+定数 $\lambda>0$ に対し、
+$$
+\begin{eqnarray}
+f(x) =\left\{ \begin{array}{ll}
+\lambda e^{-\lambda x} & (x \geq 0) \\
+0 & (x < 0) \\
+\end{array} \right.
+\end{eqnarray}
+$$
+
+{% endblock %}
+
+
+{% block statistic %}
+この分布に従う確率変数 $X$ の平均・分散は、
+$$
+E[X] = \frac{1}{\lambda}, \: V[X] = \frac{1}{\lambda ^2}
+$$
+
+{% endblock %}
+
+
+{% block parameter %}
+<div>
+		$\lambda = $<span id="lambda-value">1.00</span>
+		<div id="sliderLambda" class="slider slider-primary"></div>
+</div>
+{% endblock %}
+
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/exponential.js') }}"></script>
+{% endblock %}
