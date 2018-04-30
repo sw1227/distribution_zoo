@@ -43,7 +43,9 @@ def calculate(func_name=None):
     # 値のリストを作成
     # TODO: range
     x_list = np.linspace(-5, 5, 100)
-    y_list = func.pdf(x_list)
-    data = [{"x": x, "y": y} for (x, y) in zip(x_list, y_list)]
+    pdf_list = func.pdf(x_list)
+    cdf_list = func.cdf(x_list)
+    values = [{"x": x, "pdf": pdf, "cdf": cdf} for (x,pdf,cdf) in zip(x_list, pdf_list, cdf_list)]
+    data = {"values": values, "mean": func.mean()}
 
     return jsonify(data)
