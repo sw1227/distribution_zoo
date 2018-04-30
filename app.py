@@ -8,6 +8,16 @@ app = Flask(__name__)
 def index():
     return render_template("index.html")
 
+@app.route("/distributions/continuous")
+def continuous():
+    """ 連続型 """
+    return render_template("continuous.html")
+
+@app.route("/distributions/discrete")
+def discrete():
+    """ 離散型 """
+    return render_template("discrete.html")
+
 @app.route("/distributions/continuous/normal")
 def normal_distribution():
     """ 正規分布 """
