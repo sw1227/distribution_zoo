@@ -1,93 +1,89 @@
-{% extends "layout.html" %}
+{% extends "distribution.html" %}
 {% block title %}Normal Distribution{% endblock %}
 
-<!-- head -->
-{% block head %}
-{{ super() }}
-<style>
- .tick line {
-		 stroke: #ddd;
-     stroke-width: 0.5;
- }
 
- .card-header {
-		 display: table;
-		 width: 100%;
- }
-
- .card-title {
-		 display: table-cell;
-		 vertical-align: middle;
-		 text-align: center;
- }
-
- .slider {
-		 margin-top: 10px;
- }
-</style>
+{% block name %}
+正規分布
 {% endblock %}
 
-<!-- content -->
-{% block content %}
 
+{% block equation %}
+
+平均$\mu$, 分散$\sigma$に対し、
+$$
+f(x) = \frac{1}{\sqrt{2 \pi \sigma ^2}} exp \left( - \frac{(x-\mu)^2}{2\sigma ^2} \right) \:\: (x \in \mathbb{R})
+$$
+
+{% endblock %}
+
+
+{% block statistic %}
+
+この分布に従う確率変数$X$の平均・分散は、
+$$
+E[X] = \mu,\: V[X] = \sigma^2
+$$
+
+{% endblock %}
+
+
+{% block parameter %}
+<div>
+		平均 $\mu = $<span id="mean-value">0.00</span>
+		<div id="sliderMean" class="slider slider-primary"></div>
+</div>
 <br>
-<h3 class="category">正規分布</h3>
-
-<div class="card">
-		<div class="card-body">
-				<div>
-						<h5 class="title">確率密度関数</h5>
-						平均$\mu$, 分散$\sigma$に対し、
-						$$
-						f(x) = \frac{1}{\sqrt{2 \pi \sigma ^2}} exp \left( - \frac{(x-\mu)^2}{2\sigma ^2} \right) \:\: (x \in \mathbb{R})
-						$$
-
-						<h5 class="title">平均・分散</h5>
-						この分布に従う確率変数$X$の平均・分散は、
-						$$
-						E[X] = \mu,\: V[X] = \sigma^2
-						$$
-				</div>
-		</div>
+<div>
+		標準偏差 $\sigma = $<span id="var-value">1.00</span>
+		<div id="sliderVar" class="slider slider-primary"></div>
 </div>
+{% endblock %}
 
 
-
-
-<div class="card">
-		<div class="card-body">
-				<div class="row">
-						<div class="col-md-9">
-								<svg id="chart"></svg>
-						</div>
-						<div class="col-md-3">
-								<div>
-										平均 $\mu = $<span id="mean-value">0.00</span>
-										<div id="sliderMean" class="slider slider-primary"></div>
-								</div>
-								<br>
-								<div>
-										標準偏差 $\sigma = $<span id="var-value">1.00</span>
-										<div id="sliderVar" class="slider slider-primary"></div>
-								</div>
-						</div>
-				</div>
-		</div>
-</div>
-
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/continuous.js') }}"></script>
 <script>
- var getData = function(func_name, params, callback) {
-		 // APIに対して分布の種類とパラメータを指定し、x, yの値をJSONで得る
-		 $.ajax({
-				 type: "GET",
-				 url: "{{ url_for('index') }}" + "api/calculate/" + func_name,
-				 data: params
-		 }).done(function(data) {
-				 // コールバック関数に得られたデータを渡して実行
-				 callback(data);
-		 });
- }
-</script>
+ // APIからJSONを取得して描画する
+ var normalGraph = createContinuous();
+ getData("norm", {"loc": 0.0, "scale": 1.0, "x_min": -5, "x_max": 5},
+				 updateGraph(normalGraph));
 
-<script src="{{ url_for('static', filename='js/normal.js') }}"></script>
+ // ----- slider -----
+ var sliderMean = document.getElementById("sliderMean");
+ noUiSlider.create(sliderMean, {
+     start: 0,
+     step: 0.5,
+     connect: "lower",
+     range: {
+				 min: -5,
+				 max: 5
+     }
+ });
+ sliderMean.noUiSlider.on("slide", function() {
+     var meanValue = sliderMean.noUiSlider.get();
+     var varValue = sliderVar.noUiSlider.get();
+     getData("norm", { "loc": meanValue, "scale": varValue,  "x_min": -5, "x_max": 5},
+						 updateGraph(normalGraph));
+     d3.select("#mean-value").text(meanValue);
+ });
+
+ var sliderVar = document.getElementById("sliderVar");
+ noUiSlider.create(sliderVar, {
+     start: 1,
+     step: 0.1,
+     connect: "lower",
+     range: {
+				 min: 0.1,
+				 max: 3
+     }
+ });
+ sliderVar.noUiSlider.on("slide", function() {
+     var meanValue = sliderMean.noUiSlider.get();
+     var varValue = sliderVar.noUiSlider.get();
+     getData("norm", { "loc": meanValue, "scale": varValue,  "x_min": -5, "x_max": 5},
+						 updateGraph(normalGraph));
+     d3.select("#var-value").text(varValue);
+ });
+
+</script>
 {% endblock %}
