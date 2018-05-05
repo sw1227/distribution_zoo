@@ -30,39 +30,33 @@ $$
 
 {% endblock %}
 
-
-{% block parameter %}
-<div>
-		$\lambda = $<span id="lambda-value">1.00</span>
-		<div id="sliderLambda" class="slider slider-primary"></div>
-</div>
-{% endblock %}
-
-
 {% block scripts %}
 <script>
- // APIからJSONを取得して描画する
+
+ // グラフの各要素を保持するオブジェクト
  var exponGraph = createContinuous();
- getData("expon", {"scale": 1.0, "x_min": 0, "x_max": 5},
+
+ // パラメータ初期値
+ var initLambda = 1.0;
+
+ // APIからJSONを取得して描画する
+ getData("expon", {"scale": 1.0/initLambda, "x_min": 0, "x_max": 5},
 				 updateGraph(exponGraph));
 
  // ----- slider -----
- var sliderLambda = document.getElementById("sliderLambda");
- noUiSlider.create(sliderLambda, {
-     start: 1,
-     step: 0.2,
-     connect: "lower",
-     range: {
-				 min: 0.5,
-				 max: 5
-     }
- });
- sliderLambda.noUiSlider.on("slide", function() {
-     var lambdaValue = sliderLambda.noUiSlider.get();
-     getData("expon", {"scale": 1.0/lambdaValue, "x_min": 0, "x_max": 5},
+ var exponSliderInfo = [
+		 {"name": "lambda", "valueId": "lambda-value",
+			"text": "$\\lambda= $", "id": "slider-lambda",
+			"start": initLambda, "step": 0.2, "min": 0.5, "max": 5},
+ ];
+
+ var onExponSlide = function(valueDict) {
+		 getData("expon", {"scale": 1.0/valueDict.lambda,
+											 "x_min": 0, "x_max": 5},
 						 updateGraph(exponGraph));
-     d3.select("#lambda-value").text(lambdaValue);
- });
+ }
+
+ createSliders(exponSliderInfo, onExponSlide);
 
 </script>
 {% endblock %}

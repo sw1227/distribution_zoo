@@ -26,63 +26,38 @@ $$
 
 {% endblock %}
 
-
-{% block parameter %}
-<div>
-		平均 $\mu = $<span id="mean-value">0.00</span>
-		<div id="sliderMean" class="slider slider-primary"></div>
-</div>
-<br>
-<div>
-		標準偏差 $\sigma = $<span id="var-value">1.00</span>
-		<div id="sliderVar" class="slider slider-primary"></div>
-</div>
-{% endblock %}
-
-
 {% block scripts %}
 <script>
- // APIからJSONを取得して描画する
+
+ // グラフの各要素を保持するオブジェクト
  var normalGraph = createContinuous();
- getData("norm", {"loc": 0.0, "scale": 1.0, "x_min": -5, "x_max": 5},
+
+ // パラメータ初期値
+ var initMean = 0.0;
+ var initStd = 1.0;
+
+ // APIからJSONを取得して描画する
+ getData("norm", {"loc": initMean, "scale": initStd, "x_min": -5, "x_max": 5},
 				 updateGraph(normalGraph));
 
  // ----- slider -----
- var sliderMean = document.getElementById("sliderMean");
- noUiSlider.create(sliderMean, {
-     start: 0,
-     step: 0.5,
-     connect: "lower",
-     range: {
-				 min: -5,
-				 max: 5
-     }
- });
- sliderMean.noUiSlider.on("slide", function() {
-     var meanValue = sliderMean.noUiSlider.get();
-     var varValue = sliderVar.noUiSlider.get();
-     getData("norm", { "loc": meanValue, "scale": varValue,  "x_min": -5, "x_max": 5},
-						 updateGraph(normalGraph));
-     d3.select("#mean-value").text(meanValue);
- });
+ var normalSliderInfo = [
+		 {"name": "mean", "valueId": "mean-value",
+			"text": "$\\mu= $", "id": "slider-mean",
+			"start": initMean, "step": 0.5, "min": -5, "max": 5},
+		 {"name": "std", "valueId": "std-value",
+			"text": "$\\sigma= $", "id": "slider-std",
+			"start": initStd, "step": 0.1, "min": 0.1, "max": 3}
+ ];
 
- var sliderVar = document.getElementById("sliderVar");
- noUiSlider.create(sliderVar, {
-     start: 1,
-     step: 0.1,
-     connect: "lower",
-     range: {
-				 min: 0.1,
-				 max: 3
-     }
- });
- sliderVar.noUiSlider.on("slide", function() {
-     var meanValue = sliderMean.noUiSlider.get();
-     var varValue = sliderVar.noUiSlider.get();
-     getData("norm", { "loc": meanValue, "scale": varValue,  "x_min": -5, "x_max": 5},
+ var onNormalSlide = function(valueDict) {
+		 getData("norm", {"loc": valueDict.mean,
+											"scale": valueDict.std,
+											"x_min": -5, "x_max": 5},
 						 updateGraph(normalGraph));
-     d3.select("#var-value").text(varValue);
- });
+ }
+
+ createSliders(normalSliderInfo, onNormalSlide);
 
 </script>
 {% endblock %}
