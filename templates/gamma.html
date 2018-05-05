@@ -1,0 +1,103 @@
+{% extends "distribution.html" %}
+{% block title %}Gamma Distribution{% endblock %}
+
+
+{% block name %}
+ガンマ分布
+{% endblock %}
+
+
+{% block equation %}
+
+定数 $\lambda > 0, \alpha > 0$ に対し、
+$$
+\begin{eqnarray}
+f(x) =\left\{
+\begin{array}{ll}
+\frac{\lambda^\alpha}{\Gamma(\alpha)} x^{\alpha-1} e^{-\lambda x} & (x\geq0) \\
+0 & (x < 0) \\
+\end{array} \right.
+\end{eqnarray}
+$$
+
+ここで、 $\Gamma(\alpha)$ はガンマ関数（階乗の一般化）で、
+$$
+\Gamma(\alpha) = \int_0^\infty  x^{\alpha-1} e^{-x} dx
+$$
+
+である。ガンマ分布はガンマ関数で規格化されている感じ。
+
+$\alpha$ が自然数なら $\Gamma(\alpha) = (\alpha-1)!$
+{% endblock %}
+
+
+{% block statistic %}
+
+この分布 $Ga(\alpha, \lambda)$ に従う確率変数$X$の平均・分散は、
+$$
+E[X] = \frac{\alpha}{\lambda}, \: V[X] = \frac{\alpha}{\lambda ^2}
+$$
+
+{% endblock %}
+
+
+{% block parameter %}
+<div>
+		$\lambda = $<span id="lambda-value">2.50</span>
+		<div id="sliderLambda" class="slider slider-primary"></div>
+</div>
+<br>
+<div>
+		$\alpha = $<span id="alpha-value">5.00</span>
+		<div id="sliderAlpha" class="slider slider-primary"></div>
+</div>
+{% endblock %}
+
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/continuous.js') }}"></script>
+<script>
+ // APIからJSONを取得して描画する
+ var gammaGraph = createContinuous();
+ getData("gamma", {"a": 5.0, "scale": 0.4, "x_min": 0, "x_max": 10},
+				 updateGraph(gammaGraph));
+
+ // ----- slider -----
+ var sliderLambda = document.getElementById("sliderLambda");
+ noUiSlider.create(sliderLambda, {
+     start: 2.5,
+     step: 0.5,
+     connect: "lower",
+     range: {
+				 min: 0.5,
+				 max: 5
+     }
+ });
+ sliderLambda.noUiSlider.on("slide", function() {
+     var lambdaValue = sliderLambda.noUiSlider.get();
+     var alphaValue = sliderAlpha.noUiSlider.get();
+		 getData("gamma", {"a": alphaValue, "scale": 1.0/lambdaValue, "x_min": 0, "x_max": 10},
+						 updateGraph(gammaGraph));
+     d3.select("#lambda-value").text(lambdaValue);
+ });
+
+ var sliderAlpha = document.getElementById("sliderAlpha");
+ noUiSlider.create(sliderAlpha, {
+     start: 5,
+     step: 0.5,
+     connect: "lower",
+     range: {
+				 min: 1,
+				 max: 10
+     }
+ });
+ sliderAlpha.noUiSlider.on("slide", function() {
+		 var lambdaValue = sliderLambda.noUiSlider.get();
+     var alphaValue = sliderAlpha.noUiSlider.get();
+		 getData("gamma", {"a": alphaValue, "scale": 1.0/lambdaValue, "x_min": 0, "x_max": 10},
+						 updateGraph(gammaGraph));
+     d3.select("#alpha-value").text(alphaValue);
+ });
+ 
+</script>
+{% endblock %}

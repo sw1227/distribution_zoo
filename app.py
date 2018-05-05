@@ -28,6 +28,10 @@ def exponential_distribution():
     """ 指数分布 """
     return render_template("exponential.html")
 
+@app.route("/distributions/continuous/gamma")
+def gamma_distribution():
+    """ ガンマ分布 """
+    return render_template("gamma.html")
 
 # ----- API -----
 @app.route("/api/calculate/<func_name>")
