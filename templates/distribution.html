@@ -58,11 +58,20 @@
 <div class="card">
 		<div class="card-body">
 				<div>
+						<h5 class="title">概要</h5>
+						{% block about %} - {% endblock %}
+
 						<h5 class="title">確率密度関数</h5>
-						{% block equation %}{% endblock %}
+						{% block equation %} - {% endblock %}
 
 						<h5 class="title">平均・分散</h5>
-						{% block statistic %}{% endblock %}
+						{% block statistic %} - {% endblock %}
+
+						<h5 class="title">他の分布との関係</h5>
+						{% block relationship %} - {% endblock %}
+
+						<h5 class="title">その他性質</h5>
+						{% block other %} - {% endblock %}
 
 				</div>
 		</div>

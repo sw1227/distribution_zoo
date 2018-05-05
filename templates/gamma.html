@@ -7,6 +7,20 @@
 {% endblock %}
 
 
+{% block about %}
+
+形状母数 k、尺度母数 θ の2つのパラメータ で特徴づけられる。主に信頼性工学における電子部品の寿命分布や通信工学におけるトラフィックの待ち時間分布に応用される。また所得分布にも応用される。
+<br>
+<small>
+		<a href="https://ja.wikipedia.org/wiki/%E3%82%AC%E3%83%B3%E3%83%9E%E5%88%86%E5%B8%83">
+				ガンマ分布 - Wikipedia
+		</a>
+</small>
+<br><br>
+
+{% endblock %}
+
+
 {% block equation %}
 
 定数 $\lambda > 0, \alpha > 0$ に対し、
@@ -39,6 +53,27 @@ E[X] = \frac{\alpha}{\lambda}, \: V[X] = \frac{\alpha}{\lambda ^2}
 $$
 
 {% endblock %}
+
+
+{% block relationship %}
+<ul>
+		<li>
+				ガンマ分布は
+				<a href="{{ url_for('exponential_distribution') }}">指数分布</a>
+				を一般化したもの。$\alpha = 1$ なら
+				<a href="{{ url_for('exponential_distribution') }}">指数分布</a>
+				になる
+		</li>
+		<li>
+				$\alpha$ が整数ならアーラン分布になる。（参考：このとき $\Gamma(\alpha) = (\alpha-1)!$ ）
+				これは $\alpha$ 個の独立な指数分布の和になり、ある事象が $\alpha$ 回生起するまでの待ち時間の分布になる。（ex: 5回システムが故障するまでの間隔の分布）
+		</li>
+		<li>
+				$Ga(\frac{n}{2}, \frac{1}{2})$ は自由度 $n$ の $\chi^2$ （カイ二乗）分布に帰着する
+		</li>
+</ul>
+{% endblock %}
+
 
 {% block scripts %}
 <script>
