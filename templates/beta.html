@@ -1,0 +1,129 @@
+{% extends "distribution.html" %}
+{% block title %}Beta Distribution{% endblock %}
+
+
+{% block name %}
+ベータ分布
+{% endblock %}
+
+
+{% block about %}
+
+べイズ統計学において二項分布の共役事前分布として登場する
+<br>
+<small>
+		<a href="https://ja.wikipedia.org/wiki/%E3%83%99%E3%83%BC%E3%82%BF%E5%88%86%E5%B8%83">
+				ベータ分布 - Wikipedia
+		</a>
+</small>
+<br><br>
+
+{% endblock %}
+
+
+{% block equation %}
+
+定数 $\alpha>0, \beta > 0$ に対し、
+$$
+\begin{eqnarray}
+f(x) =\left\{
+\begin{array}{ll}
+\frac{x^{\alpha-1}(1-x)^{\beta-1}}{B(\alpha, \beta)} & (0 \leq x \leq 1) \\
+0 & (other) \\
+\end{array} \right.
+\end{eqnarray}
+$$
+
+ここで、$B(\alpha, \beta)$は
+<a href="https://ja.wikipedia.org/wiki/%E3%83%99%E3%83%BC%E3%82%BF%E9%96%A2%E6%95%B0">
+ベータ関数
+</a>
+で、
+$$
+B(\alpha, \beta) = \int_0^1  x^{\alpha-1} (1-x)^{\beta-1} dx, \:\:\: (\alpha > 0, \beta > 0)
+$$
+
+また、
+<a href="https://ja.wikipedia.org/wiki/%E3%82%AC%E3%83%B3%E3%83%9E%E9%96%A2%E6%95%B0">
+ガンマ関数
+</a>
+とは以下の関係にある
+$$
+B(\alpha, \beta) = \frac{\Gamma (\alpha) \Gamma (\beta)}{\Gamma (\alpha + \beta)}
+$$
+
+{% endblock %}
+
+
+{% block statistic %}
+この分布 $Beta(\alpha, \beta)$ に従う確率変数 $X$ の平均・分散は、
+$$
+E[X] = \frac{\alpha}{\alpha + \beta}, \: V[X] = \frac{\alpha \beta}{(\alpha + \beta)^2 (\alpha + \beta + 1)}
+$$
+
+{% endblock %}
+
+
+{% block relationship %}
+<ul>
+		<li>
+				$\alpha = \beta = 1$ の時は一様分布になる
+		</li>
+</ul>
+{% endblock %}
+
+{% block other %}
+<ul>
+		<li>
+				イメージ（ベイズ統計学で重要になる）:
+				<blockquote>
+						<p class="blockquote blockquote-default">
+								Thus, the Beta distribution is best for representing a probabilistic distribution of probabilities- the case where we don't know what a probability is in advance, but we have some reasonable guesses.
+								<br><br>
+								<small>
+										<a href="https://postd.cc/one-year-as-a-data-scientist-at-stack-overflow/">
+												Stack Overflowのデータサイエンティストとしての1年間
+										</a>
+								</small>
+						</p>
+				</blockquote>
+		</li>
+</ul>
+{% endblock %}
+
+
+{% block scripts %}
+<script>
+
+ // グラフの各要素を保持するオブジェクト
+ var betaGraph = createContinuous();
+
+ // パラメータ初期値
+ var initAlpha = 2.5;
+ var initBeta = 5;
+
+ // APIからJSONを取得して描画する
+ getData("beta", {"a": initAlpha, "b": initBeta, "x_min": 0, "x_max": 1},
+				 updateGraph(betaGraph));
+
+ // ----- slider -----
+ var betaSliderInfo = [
+		 {"name": "alpha", "valueId": "alpha-value",
+			"text": "$\\alpha= $", "id": "slider-alpha",
+			"start": initAlpha, "step": 0.25, "min": 0.5, "max": 5},
+		 {"name": "beta", "valueId": "beta-value",
+			"text": "$\\beta= $", "id": "slider-beta",
+			"start": initBeta, "step": 0.5, "min": 0.5, "max": 10}
+ ];
+
+ var onBetaSlide = function(valueDict) {
+		 console.log("onBetaSlide");
+		 getData("beta", {"a": valueDict.alpha, "b": valueDict.beta,
+											"x_min": 0, "x_max": 1},
+						 updateGraph(betaGraph));
+ }
+
+ createSliders(betaSliderInfo, onBetaSlide);
+
+</script>
+{% endblock %}

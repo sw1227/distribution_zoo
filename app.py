@@ -33,6 +33,11 @@ def gamma_distribution():
     """ ガンマ分布 """
     return render_template("gamma.html")
 
+@app.route("/distributions/continuous/beta")
+def beta_distribution():
+    """ ベータ分布 """
+    return render_template("beta.html")
+
 # ----- API -----
 @app.route("/api/calculate/<func_name>")
 def calculate(func_name=None):
