@@ -40,37 +40,31 @@ $$
 
 {% endblock %}
 
-
-{% block parameter %}
-<div>
-		$\lambda = $<span id="lambda-value">2.50</span>
-		<div id="sliderLambda" class="slider slider-primary"></div>
-</div>
-<br>
-<div>
-		$\alpha = $<span id="alpha-value">5.00</span>
-		<div id="sliderAlpha" class="slider slider-primary"></div>
-</div>
-{% endblock %}
-
-
 {% block scripts %}
 <script src="{{ url_for('static', filename='js/continuous.js') }}"></script>
 <script src="{{ url_for('static', filename='js/sliderUtil.js') }}"></script>
 <script>
 
- // APIからJSONを取得して描画する
+ // グラフの各要素を保持するオブジェクト
  var gammaGraph = createContinuous();
- getData("gamma", {"a": 5.0, "scale": 0.4, "x_min": 0, "x_max": 10},
+
+ // パラメータ初期値
+ var initLambda = 2.5;
+ var initAlpha = 5.0;
+
+ // APIからJSONを取得して描画する
+ getData("gamma", {"a": initAlpha, "scale": 1.0/initLambda, "x_min": 0, "x_max": 10},
 				 updateGraph(gammaGraph));
 
  // ----- slider -----
- var gammaSliderInfo = [{"name": "lambda", "valueId": "#lambda-value",
-												 "element": document.getElementById("sliderLambda"),
-												 "start": 2.5, "step": 0.5, "min": 0.5, "max": 5},
-												{"name": "alpha", "valueId": "#alpha-value",
-												 "element": document.getElementById("sliderAlpha"),
-												 "start": 5, "step": 0.5, "min": 1, "max": 10}];
+ var gammaSliderInfo = [
+		 {"name": "lambda", "valueId": "lambda-value",
+			"text": "$\\lambda= $", "id": "slider-lambda",
+			"start": initLambda, "step": 0.5, "min": 0.5, "max": 5},
+		 {"name": "alpha", "valueId": "alpha-value",
+			"text": "$\\alpha= $", "id": "slider-alpha",
+			"start": initAlpha, "step": 0.5, "min": 1, "max": 10}
+ ];
 
  var onGammaSlide = function(valueDict) {
 		 getData("gamma", {"a": valueDict.alpha,
