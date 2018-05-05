@@ -56,48 +56,30 @@ $$
 
 {% block scripts %}
 <script src="{{ url_for('static', filename='js/continuous.js') }}"></script>
+<script src="{{ url_for('static', filename='js/sliderUtil.js') }}"></script>
 <script>
+
  // APIからJSONを取得して描画する
  var gammaGraph = createContinuous();
  getData("gamma", {"a": 5.0, "scale": 0.4, "x_min": 0, "x_max": 10},
 				 updateGraph(gammaGraph));
 
  // ----- slider -----
- var sliderLambda = document.getElementById("sliderLambda");
- noUiSlider.create(sliderLambda, {
-     start: 2.5,
-     step: 0.5,
-     connect: "lower",
-     range: {
-				 min: 0.5,
-				 max: 5
-     }
- });
- sliderLambda.noUiSlider.on("slide", function() {
-     var lambdaValue = sliderLambda.noUiSlider.get();
-     var alphaValue = sliderAlpha.noUiSlider.get();
-		 getData("gamma", {"a": alphaValue, "scale": 1.0/lambdaValue, "x_min": 0, "x_max": 10},
-						 updateGraph(gammaGraph));
-     d3.select("#lambda-value").text(lambdaValue);
- });
+ var gammaSliderInfo = [{"name": "lambda", "valueId": "#lambda-value",
+												 "element": document.getElementById("sliderLambda"),
+												 "start": 2.5, "step": 0.5, "min": 0.5, "max": 5},
+												{"name": "alpha", "valueId": "#alpha-value",
+												 "element": document.getElementById("sliderAlpha"),
+												 "start": 5, "step": 0.5, "min": 1, "max": 10}];
 
- var sliderAlpha = document.getElementById("sliderAlpha");
- noUiSlider.create(sliderAlpha, {
-     start: 5,
-     step: 0.5,
-     connect: "lower",
-     range: {
-				 min: 1,
-				 max: 10
-     }
- });
- sliderAlpha.noUiSlider.on("slide", function() {
-		 var lambdaValue = sliderLambda.noUiSlider.get();
-     var alphaValue = sliderAlpha.noUiSlider.get();
-		 getData("gamma", {"a": alphaValue, "scale": 1.0/lambdaValue, "x_min": 0, "x_max": 10},
+ var onGammaSlide = function(valueDict) {
+		 getData("gamma", {"a": valueDict.alpha,
+											 "scale": 1.0/valueDict.lambda,
+											 "x_min": 0, "x_max": 10},
 						 updateGraph(gammaGraph));
-     d3.select("#alpha-value").text(alphaValue);
- });
- 
+ }
+
+ createSliders(gammaSliderInfo, onGammaSlide);
+
 </script>
 {% endblock %}
