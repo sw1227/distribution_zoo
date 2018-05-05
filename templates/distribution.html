@@ -84,6 +84,9 @@
 
 
 <!-- Javascript -->
+<script src="{{ url_for('static', filename='js/continuous.js') }}"></script>
+<script src="{{ url_for('static', filename='js/sliderUtil.js') }}"></script>
+
 <script>
  var getData = function(func_name, params, callback) {
 		 // APIに対して分布の種類とパラメータを指定し、x, yの値をJSONで得る
