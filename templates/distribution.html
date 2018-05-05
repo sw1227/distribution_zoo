@@ -13,6 +13,37 @@
  .slider {
 		 margin-top: 10px;
  }
+
+ .axis-label {
+		 fill: #000;
+		 font-size : 1rem;
+ }
+
+ .prob-line {
+		 stroke-opacity: 0.6;
+		 stroke-linejoin: round;
+		 stroke-linecap: round;
+		 stroke-width: 2;
+		 fill: none;
+ }
+
+ .pdf-line {
+		 stroke: rgb(44, 168, 255);
+ }
+
+ .cdf-line {
+		 stroke: rgb(24, 206, 15)
+ }
+
+ .pdf-area {
+		 fill: rgb(44, 168, 255);
+		 fill-opacity: 0.2;
+		 stroke: none;
+ }
+
+ .mean-line {
+		 stroke: rgb(255, 54, 54);
+ }
 </style>
 {% endblock %}
 
@@ -69,5 +100,3 @@
 {% block scripts %}{% endblock %}
 
 {% endblock %}
-
-
